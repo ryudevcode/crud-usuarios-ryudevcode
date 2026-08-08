@@ -5,6 +5,14 @@ import crud_usuarios_ryudevcode.repository.UsuarioRepository;
 import crud_usuarios_ryudevcode.service.UsuarioService;
 import org.springframework.stereotype.Service;
 
+import crud_usuarios_ryudevcode.dto.UsuarioRequest;
+import crud_usuarios_ryudevcode.dto.UsuarioResponse;
+
+
+import crud_usuarios_ryudevcode.exception.ResourceNotFoundException;
+import crud_usuarios_ryudevcode.exception.DuplicateResourceException;
+
+import java.nio.file.LinkOption;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,49 +29,100 @@ public class UsuarioServiceImpl implements  UsuarioService {
         this.UsuarioRepository = usuarioRepository;
     }
 
-    //guardar todo lo usurios
+    //crear un nuevo usuario
     @Override
-    public Usuario guardarUsuario(Usuario usuario){
-        return UsuarioRepository.save(usuario);
-    }
+    public UsuarioResponse guardarUsuario(UsuarioRequest usuarioRequest){
+        //verificamos si el correo ya esta registrado
+        // Verificamos si el correo ya está registrado
+        if (UsuarioRepository.existsByCorreo(usuarioRequest.getCorreo())) {
 
-    //obtener toso lo usuarios
-    @Override
-    public List<Usuario> obtenerUsuarios(){
-        return  UsuarioRepository.findAll();
-    }
-
-    //Busca un usurio por su id
-    @Override
-    public Optional<Usuario> obtenerUsuarioPorId(Long id){
-        return UsuarioRepository.findById(id);
-    }
-
-    //actulizar un usuario existente
-    @Override
-    public Usuario actulizarUsuario(Long id,Usuario usuario){
-        //buscamos el usurios por su id
-        Optional<Usuario> usuarioExistente= UsuarioRepository.findById(id);
-
-        //si existe actulizamos sus datos
-        if(usuarioExistente.isPresent()){
-            Usuario usuarioActilizar = usuarioExistente.get();
-            usuarioActilizar.setNombre(usuario.getNombre());
-            usuarioActilizar.setCorreo(usuario.getCorreo());
-            usuarioActilizar.setEdad(usuario.getEdad());
-
-            return UsuarioRepository.save(usuarioActilizar);
+            throw new DuplicateResourceException(
+                    "El correo ya está registrado: "
+                            + usuarioRequest.getCorreo()
+            );
         }
 
-        //si no existe lanzamos una excepcion
-        throw  new RuntimeException("Usuario no encontrado con id: "+id);
+
+        // convertimos el DTO recibido en un entity
+        Usuario usuario = new Usuario();
+
+        usuario.setNombre(usuarioRequest.getNombre());
+        usuario.setEdad(usuarioRequest.getEdad());
+        usuario.setCorreo(usuarioRequest.getCorreo());
+
+        // guardamos la entity en la abse  de datos
+        Usuario usuarioGuardado = UsuarioRepository.save(usuario);
+
+        // convertimos la entity guarda en un DTO de repuesta
+        return  convertirAResponse(usuarioGuardado);
+    }
+
+    //buscar usuario por id
+    @Override
+    public List<UsuarioResponse> obtenerUsuarios(){
+
+        //Obtener todas las entidades de la base  de datos
+        List<Usuario> usuarios = UsuarioRepository.findAll();
+
+        // convertirmo cada entity en un UsuarioReponse
+        return  usuarios.stream().map(this::convertirAResponse).toList();
+
+    }
+
+    // Buscamos usuario por id
+    @Override
+    public UsuarioResponse obtenerUsuarioPorId(Long id){
+
+        //Buscamos el usurio en la base de datos
+        Usuario usuario = UsuarioRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Usuario no encontrado con id: "+id));
+        //convertirmo la entity en DTO
+        return convertirAResponse(usuario);
+    }
+
+    // Actulizar Usuario Existente
+    @Override
+    public UsuarioResponse actulizarUsuario (Long id, UsuarioRequest usuarioRequest){
+        //Buscamos el usurio que queremos actulizar
+
+        Usuario usuario =UsuarioRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Usuario no encotrado "+id));
+
+        //Actualziamo el usurio
+        usuario.setEdad(usuarioRequest.getEdad());
+        usuario.setNombre(usuarioRequest.getNombre());
+        usuario.setCorreo(usuarioRequest.getCorreo());
+
+        //Guardamos los cambios
+        Usuario usuarioActulizado = UsuarioRepository.save(usuario);
+
+        // convertirmo la entiry actulizada en DTO
+
+        return  convertirAResponse(usuarioActulizado);
     }
 
 
-     //elimina un usurio
+    // Eliminar el usuario
     @Override
     public void eliminarUsuario(Long id){
+
+        //verificamos que el usurio exista
+        if(!UsuarioRepository.existsById(id)){
+            throw new ResourceNotFoundException("Usuario no encontrado id "+id);
+        }
         UsuarioRepository.deleteById(id);
+
+    }
+
+
+
+
+    ///  convertir una entity usuairo en usuarioResponse
+    private UsuarioResponse convertirAResponse(Usuario usuario){
+        return  new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getCorreo(),
+                usuario.getEdad()
+        );
     }
 
 
