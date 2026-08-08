@@ -9,6 +9,9 @@ import crud_usuarios_ryudevcode.dto.UsuarioRequest;
 import crud_usuarios_ryudevcode.dto.UsuarioResponse;
 
 
+import crud_usuarios_ryudevcode.exception.ResourceNotFoundException;
+
+
 import java.nio.file.LinkOption;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +63,7 @@ public class UsuarioServiceImpl implements  UsuarioService {
     public UsuarioResponse obtenerUsuarioPorId(Long id){
 
         //Buscamos el usurio en la base de datos
-        Usuario usuario = UsuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario no encontrado con id: "+id));
+        Usuario usuario = UsuarioRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Usuario no encontrado con id: "+id));
         //convertirmo la entity en DTO
         return convertirAResponse(usuario);
     }
@@ -70,7 +73,7 @@ public class UsuarioServiceImpl implements  UsuarioService {
     public UsuarioResponse actulizarUsuario (Long id, UsuarioRequest usuarioRequest){
         //Buscamos el usurio que queremos actulizar
 
-        Usuario usuario =UsuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario no encotrado "+id));
+        Usuario usuario =UsuarioRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Usuario no encotrado "+id));
 
         //Actualziamo el usurio
         usuario.setEdad(usuarioRequest.getEdad());
@@ -92,7 +95,7 @@ public class UsuarioServiceImpl implements  UsuarioService {
 
         //verificamos que el usurio exista
         if(!UsuarioRepository.existsById(id)){
-            throw new RuntimeException("Usuario no encontrado id "+id);
+            throw new ResourceNotFoundException("Usuario no encontrado id "+id);
         }
         UsuarioRepository.deleteById(id);
 

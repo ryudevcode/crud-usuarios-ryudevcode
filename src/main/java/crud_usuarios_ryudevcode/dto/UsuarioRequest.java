@@ -1,16 +1,28 @@
 package crud_usuarios_ryudevcode.dto;
 
 
+import jakarta.validation.constraints.*;
+
 //clase utilizada para recibir informacion del cliente
 public class UsuarioRequest {
 
     //Nombre del usuario
+    //No permite valores null, vacios o solamente espacios
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max=100, message="El nombre debe tener entre 2 y 100 caracteres")
     private String nombre;
 
     //Correo electronico
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "El correo debe tener un formato valido")
     private String correo;
 
     //Edad
+    @NotNull(message = "La edad es obligatoria")
+    //La edad minimima
+    @Min(
+            value= 18, message ="La edad debe ser mayor o igual a 18"
+    )
     private Integer edad;
 
     //constructor vacio

@@ -3,7 +3,9 @@ package crud_usuarios_ryudevcode.controller;
 import crud_usuarios_ryudevcode.dto.UsuarioResponse;
 import  crud_usuarios_ryudevcode.dto.UsuarioRequest;
 import crud_usuarios_ryudevcode.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +27,7 @@ public class UsuarioController {
 
     //guarda un nuevo usuario
     @PostMapping
-    public UsuarioResponse guardarUsuario(@RequestBody UsuarioRequest UsuarioRequest){
+    public UsuarioResponse guardarUsuario(@Valid @RequestBody UsuarioRequest UsuarioRequest){
         return  usuarioService.guardarUsuario(UsuarioRequest);
     }
 
@@ -45,7 +47,7 @@ public class UsuarioController {
     }
     @PutMapping("/{id}")
     public UsuarioResponse actualizarUsuario(@PathVariable Long id,
-                                             @RequestBody UsuarioRequest UsuarioRequest){
+                                             @Valid @RequestBody UsuarioRequest UsuarioRequest){
         return usuarioService.actulizarUsuario(id, UsuarioRequest);
     }
 
