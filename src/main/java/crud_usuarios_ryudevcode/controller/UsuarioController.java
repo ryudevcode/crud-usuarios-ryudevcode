@@ -26,6 +26,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+
 //indicamos que esta clase es un controlador rest responde peticiones http y devolvera JSON
 
 @RestController
@@ -231,6 +235,24 @@ public class UsuarioController {
         usuarioService.eliminarUsuario(id);
 
       return  ResponseEntity.noContent().build();
+    }
+
+    //optiene usuarios utilizando paginacion
+    @Operation( summary =  "Obtener usuarios paginados",
+    description = "obteiene una pagina de usuarios utilizando paginacion y ordenamiento")
+    @ApiResponses(value = {
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Usuarios obtenidos correctamente"
+            )
+    })
+    @GetMapping("/pagina")
+    public ResponseEntity<Page<UsuarioResponse>> obtenerUsuariosPaginados(Pageable pageable){
+        //Obtener la pagina desde el service
+        Page<UsuarioResponse> pagina = usuarioService.obtenerUsuariosPaginados(pageable);
+        return ResponseEntity.ok(pagina);
+
     }
 
 }

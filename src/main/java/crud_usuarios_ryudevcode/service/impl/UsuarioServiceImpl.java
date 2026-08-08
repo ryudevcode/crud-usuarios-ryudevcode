@@ -11,7 +11,8 @@ import crud_usuarios_ryudevcode.dto.UsuarioResponse;
 
 import crud_usuarios_ryudevcode.exception.ResourceNotFoundException;
 import crud_usuarios_ryudevcode.exception.DuplicateResourceException;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.nio.file.LinkOption;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +113,15 @@ public class UsuarioServiceImpl implements  UsuarioService {
 
     }
 
+    @Override
+    public Page<UsuarioResponse> obtenerUsuariosPaginados (Pageable pageable){
 
+        //Obtenemos una pagina de usuarios desde la abse  de datos
+        Page<Usuario> pagina  = UsuarioRepository.findAll(pageable);
+
+        // convertimos a string
+        return pagina.map(this::convertirAResponse);
+    }
 
 
     ///  convertir una entity usuairo en usuarioResponse

@@ -4,6 +4,8 @@ package crud_usuarios_ryudevcode.service;
 
 import crud_usuarios_ryudevcode.dto.UsuarioRequest;
 import crud_usuarios_ryudevcode.dto.UsuarioResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,5 +29,7 @@ public interface UsuarioService {
     //eliminar un usurios por su id
     void eliminarUsuario(Long id);
 
+   // Obtiene los usuarios utilizando paginacion
+    Page<UsuarioResponse> obtenerUsuariosPaginados(Pageable pageable);
 
 }
