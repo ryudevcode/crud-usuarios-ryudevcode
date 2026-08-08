@@ -1,16 +1,35 @@
 package crud_usuarios_ryudevcode.dto;
 
-
+import io.swagger.v3.oas.annotations.media.Schema;
 //clase utilizada para responder informacion al cliente
+@Schema(
+        description = "Información del usuario retornada por la API"
+)
 public class UsuarioResponse {
 
     //Indentificador del usuario
+    @Schema(
+            description = "Identificador único del usuario",
+            example = "1"
+    )
     private Long id;
     //Nombre del usuario
+    @Schema(
+            description = "Nombre completo del usuario",
+            example = "Carlos Eduardo"
+    )
     private String nombre;
     //Correo electronico
+    @Schema(
+            description = "Correo electrónico del usuario",
+            example = "carlos@gmail.com"
+    )
     private String correo;
     //edad
+    @Schema(
+            description = "Edad del usuario",
+            example = "25"
+    )
     private Integer edad;
 
     //constructor vacio
