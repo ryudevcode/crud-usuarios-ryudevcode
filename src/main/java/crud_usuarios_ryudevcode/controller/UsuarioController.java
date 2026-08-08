@@ -1,6 +1,7 @@
 package crud_usuarios_ryudevcode.controller;
 
-import  crud_usuarios_ryudevcode.entity.Usuario;
+import crud_usuarios_ryudevcode.dto.UsuarioResponse;
+import  crud_usuarios_ryudevcode.dto.UsuarioRequest;
 import crud_usuarios_ryudevcode.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,27 +25,28 @@ public class UsuarioController {
 
     //guarda un nuevo usuario
     @PostMapping
-    public Usuario guardarUsuario(@RequestBody Usuario usuario){
-        return  usuarioService.guardarUsuario(usuario);
+    public UsuarioResponse guardarUsuario(@RequestBody UsuarioRequest UsuarioRequest){
+        return  usuarioService.guardarUsuario(UsuarioRequest);
     }
 
 
     // obtenemos todos los usuarios
     @GetMapping
-    public List<Usuario> obtenerUsuarios(){
+    public List<UsuarioResponse> obtenerUsuarios(){
         return usuarioService.obtenerUsuarios();
     }
 
     // Busca un usuario por su id
     @GetMapping("/{id}")
-    public Optional<Usuario> obtenerUsuarioPorId(@PathVariable Long id) {
+    public UsuarioResponse obtenerUsuarioPorId(@PathVariable Long id) {
 
         return usuarioService.obtenerUsuarioPorId(id);
 
     }
     @PutMapping("/{id}")
-    public Usuario actualizarUsuario(@PathVariable Long id,@RequestBody Usuario usuario){
-        return usuarioService.actulizarUsuario(id, usuario);
+    public UsuarioResponse actualizarUsuario(@PathVariable Long id,
+                                             @RequestBody UsuarioRequest UsuarioRequest){
+        return usuarioService.actulizarUsuario(id, UsuarioRequest);
     }
 
     //Elimina un usuario por su id
