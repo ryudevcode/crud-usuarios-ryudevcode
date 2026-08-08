@@ -9,6 +9,13 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.*;
+
 
 //indicamos que esta clase es un controlador rest responde peticiones http y devolvera JSON
 
@@ -27,34 +34,66 @@ public class UsuarioController {
 
     //guarda un nuevo usuario
     @PostMapping
-    public UsuarioResponse guardarUsuario(@Valid @RequestBody UsuarioRequest UsuarioRequest){
-        return  usuarioService.guardarUsuario(UsuarioRequest);
+    public ResponseEntity guardarUsuario(
+            @Valid @RequestBody UsuarioRequest UsuarioRequest){
+
+        // Llamamos al Service para guardar el usuario
+        UsuarioResponse usuarioResponse =
+                usuarioService.guardarUsuario(UsuarioRequest);
+
+        // Retornamos HTTP 201 CREATED
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(usuarioResponse);
+
     }
 
 
     // obtenemos todos los usuarios
     @GetMapping
-    public List<UsuarioResponse> obtenerUsuarios(){
-        return usuarioService.obtenerUsuarios();
+    public ResponseEntity<List<UsuarioResponse>> obtenerUsuarios(){
+
+        //Obtenermos los usuarios desde el service
+        List<UsuarioResponse> usuarios = usuarioService.obtenerUsuarios();
+        //Retornamos el HTTP 200 ok
+        return  ResponseEntity.ok(usuarios);
+
     }
+
+
 
     // Busca un usuario por su id
     @GetMapping("/{id}")
-    public UsuarioResponse obtenerUsuarioPorId(@PathVariable Long id) {
+    public ResponseEntity obtenerUsuarioPorId(@PathVariable Long id) {
 
-        return usuarioService.obtenerUsuarioPorId(id);
+        //El service devuelve usuarioResponse
+        UsuarioResponse usuario = usuarioService.obtenerUsuarioPorId(id);
+
+        //Retornamos HTTP 200 ok
+        return ResponseEntity.ok(usuario);
 
     }
+
+
     @PutMapping("/{id}")
-    public UsuarioResponse actualizarUsuario(@PathVariable Long id,
+    public ResponseEntity actualizarUsuario(@PathVariable Long id,
                                              @Valid @RequestBody UsuarioRequest UsuarioRequest){
-        return usuarioService.actulizarUsuario(id, UsuarioRequest);
+
+        //Actulizamos el usurio meidnate el service
+        UsuarioResponse usuarioActulizado =  usuarioService.actulizarUsuario(id, UsuarioRequest);
+
+        //Retornamos HTTP 200 ok
+        return ResponseEntity.ok(usuarioActulizado);
+
     }
 
     //Elimina un usuario por su id
     @DeleteMapping("/{id}")
-    public void eliminarUsuario(@PathVariable long id){
+    public ResponseEntity <Void > eliminarUsuario(@PathVariable long id){
+
         usuarioService.eliminarUsuario(id);
+
+      return  ResponseEntity.noContent().build();
     }
 
 }

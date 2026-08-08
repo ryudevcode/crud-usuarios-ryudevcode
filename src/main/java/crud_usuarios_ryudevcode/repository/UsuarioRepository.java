@@ -10,4 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 //indicamos la interfaz administrara la entidad usurios
 public interface UsuarioRepository  extends  JpaRepository<Usuario, Long>{
 
+     // Existe algun correo
+    boolean existsByCorreo(String correo);
+
+
 }

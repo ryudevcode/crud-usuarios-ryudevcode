@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.HttpStatus;
+import crud_usuarios_ryudevcode.exception.DuplicateResourceException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,5 +58,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(respuesta);
+    }
+
+
+    //Maneja conflictos cuando un recurso ya existe
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponse> manejarRecursosDuplicados(
+            DuplicateResourceException exception) {
+        //Creamos la respuesta de error
+       ErrorResponse errorResponse = new ErrorResponse(
+               HttpStatus.CREATED.value(),
+               exception.getMessage()
+       );
+        return  ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 }

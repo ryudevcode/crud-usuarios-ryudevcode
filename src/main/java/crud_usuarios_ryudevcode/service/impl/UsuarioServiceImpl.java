@@ -10,7 +10,7 @@ import crud_usuarios_ryudevcode.dto.UsuarioResponse;
 
 
 import crud_usuarios_ryudevcode.exception.ResourceNotFoundException;
-
+import crud_usuarios_ryudevcode.exception.DuplicateResourceException;
 
 import java.nio.file.LinkOption;
 import java.util.List;
@@ -32,6 +32,17 @@ public class UsuarioServiceImpl implements  UsuarioService {
     //crear un nuevo usuario
     @Override
     public UsuarioResponse guardarUsuario(UsuarioRequest usuarioRequest){
+        //verificamos si el correo ya esta registrado
+        // Verificamos si el correo ya está registrado
+        if (UsuarioRepository.existsByCorreo(usuarioRequest.getCorreo())) {
+
+            throw new DuplicateResourceException(
+                    "El correo ya está registrado: "
+                            + usuarioRequest.getCorreo()
+            );
+        }
+
+
         // convertimos el DTO recibido en un entity
         Usuario usuario = new Usuario();
 
