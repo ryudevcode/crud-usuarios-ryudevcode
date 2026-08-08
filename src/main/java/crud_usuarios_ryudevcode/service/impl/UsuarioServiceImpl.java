@@ -123,6 +123,16 @@ public class UsuarioServiceImpl implements  UsuarioService {
         return pagina.map(this::convertirAResponse);
     }
 
+    @Override
+    public Page<UsuarioResponse> buscarPorNombre(String nombre, Pageable pageable){
+
+        //Buscamos los usuarios mediante el repository
+        Page<Usuario> pagina = UsuarioRepository.findByNombreContainingIgnoreCase(nombre, pageable);
+
+        //Convertimos cada entity en usurioreponse
+        return pagina.map(this::convertirAResponse);
+
+    }
 
     ///  convertir una entity usuairo en usuarioResponse
     private UsuarioResponse convertirAResponse(Usuario usuario){

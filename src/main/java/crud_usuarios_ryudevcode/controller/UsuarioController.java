@@ -255,4 +255,36 @@ public class UsuarioController {
 
     }
 
+
+    //Busca usuario por nombre
+    // Busca usuarios por nombre
+    @Operation(
+            summary = "Buscar usuarios por nombre",
+            description = "Busca usuarios cuyo nombre contenga el texto indicado. Permite paginación y ordenamiento."
+    )
+    @ApiResponses(value = {
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Búsqueda realizada correctamente"
+            )
+    })
+    @GetMapping("/buscar")
+    public ResponseEntity<Page<UsuarioResponse>> buscarPorNombre(
+            //Texto que se utilizara para buscar
+            @Parameter(
+                    description = "Texto  que sea desea buscar dentro del nombre",
+                    example = "Brandon"
+            )
+            @RequestParam String nombre, Pageable pageable
+    ){
+
+        //Ejecutamos la busqueda mediante el service
+        Page<UsuarioResponse> pagina = usuarioService.buscarPorNombre(nombre,pageable);
+
+        //retornamos HTTP 200 ok
+        return ResponseEntity.ok(pagina);
+
+    }
+
 }

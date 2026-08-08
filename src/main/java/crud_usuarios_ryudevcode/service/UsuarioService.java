@@ -32,4 +32,8 @@ public interface UsuarioService {
    // Obtiene los usuarios utilizando paginacion
     Page<UsuarioResponse> obtenerUsuariosPaginados(Pageable pageable);
 
+    //Busca usuarios por nombre utilizado paginacion
+    Page<UsuarioResponse> buscarPorNombre (String nombre, Pageable pageable);
+
+
 }
