@@ -20,4 +20,9 @@ public interface UsuarioRepository  extends  JpaRepository<Usuario, Long>{
     Page<Usuario> findByNombreContainingIgnoreCase(String nombre, Pageable pageable);
 
 
+    // Busca usuarios cuyo correo contenga el texto indicado
+    Page<Usuario> findByCorreoContainingIgnoreCase(
+            String correo,
+            Pageable pageable
+    );
 }

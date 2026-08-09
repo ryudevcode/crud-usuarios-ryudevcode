@@ -145,5 +145,16 @@ public class UsuarioServiceImpl implements  UsuarioService {
     }
 
 
+    @Override
+    public Page<UsuarioResponse> buscarPorCorreo(
+            String correo, Pageable pageable
+    ){
+        //Buscamos usurio por correo
+        Page<Usuario> pagina = UsuarioRepository.findByCorreoContainingIgnoreCase(correo,pageable);
+
+        //convertirmos a entity DTO
+        return pagina.map(this::convertirAResponse);
+    }
+
 
 }

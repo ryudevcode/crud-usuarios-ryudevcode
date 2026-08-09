@@ -35,5 +35,11 @@ public interface UsuarioService {
     //Busca usuarios por nombre utilizado paginacion
     Page<UsuarioResponse> buscarPorNombre (String nombre, Pageable pageable);
 
+    //Busca usuarios por correo utilizado paginacion
+     Page<UsuarioResponse> buscarPorCorreo(
+       String correo,
+       Pageable pageable
+     );
+
 
 }

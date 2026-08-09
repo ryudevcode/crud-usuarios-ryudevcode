@@ -287,4 +287,43 @@ public class UsuarioController {
 
     }
 
+    // Busca usuarios por correo
+    @Operation(
+            summary = "Buscar usuarios por correo",
+            description = "Busca usuarios cuyo correo contenga el texto indicado."
+    )
+    @ApiResponses(value = {
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Búsqueda realizada correctamente"
+            )
+    })
+    @GetMapping("/buscar/correo")
+    public ResponseEntity<Page<UsuarioResponse>> buscarPorCorreo(
+
+            // Texto que se buscará dentro del correo
+            @Parameter(
+                    description = "Texto que se desea buscar dentro del correo",
+                    example = "gmail"
+            )
+            @RequestParam String correo,
+
+            // Información de paginación y ordenamiento
+            Pageable pageable) {
+
+        // Ejecutamos la búsqueda
+        Page<UsuarioResponse> pagina =
+                usuarioService.buscarPorCorreo(
+                        correo,
+                        pageable
+                );
+
+        // Retornamos HTTP 200 OK
+        return ResponseEntity.ok(pagina);
+    }
+
+
+
+
 }
