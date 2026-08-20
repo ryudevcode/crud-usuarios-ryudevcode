@@ -41,5 +41,12 @@ public interface UsuarioService {
        Pageable pageable
      );
 
+    // Obtiene usuarios aplicando filtros, paginación y ordenamiento
+    Page<UsuarioResponse> buscarUsuarios(
+            String nombre,
+            String correo,
+            Pageable pageable
+    );
+
 
 }

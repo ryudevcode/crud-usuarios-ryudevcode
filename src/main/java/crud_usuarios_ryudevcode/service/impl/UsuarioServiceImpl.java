@@ -156,5 +156,22 @@ public class UsuarioServiceImpl implements  UsuarioService {
         return pagina.map(this::convertirAResponse);
     }
 
+    @Override
+    public Page<UsuarioResponse> buscarUsuarios(
+            String nombre,
+            String correo,
+            Pageable pageable) {
+
+        // Buscamos usuarios aplicando los filtros opcionales
+        Page<Usuario> pagina =
+                UsuarioRepository.buscarUsuarios(
+                        nombre,
+                        correo,
+                        pageable
+                );
+
+        // Convertimos cada Entity en UsuarioResponse
+        return pagina.map(this::convertirAResponse);
+    }
 
 }

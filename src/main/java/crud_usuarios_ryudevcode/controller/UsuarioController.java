@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 //indicamos que esta clase es un controlador rest responde peticiones http y devolvera JSON
@@ -99,7 +100,7 @@ public class UsuarioController {
                 .body(usuarioResponse);
 
     }
-
+/*
     @Operation(
             summary = "Obtener todos los usuarios",
             description = "Obtiene la lista completa de usuarios registrados."
@@ -112,7 +113,7 @@ public class UsuarioController {
             )
     })
     // obtenemos todos los usuarios
-    @GetMapping
+   @GetMapping
     public ResponseEntity<List<UsuarioResponse>> obtenerUsuarios(){
 
         //Obtenermos los usuarios desde el service
@@ -121,7 +122,51 @@ public class UsuarioController {
         return  ResponseEntity.ok(usuarios);
 
     }
+*/
+    @Operation(
+            summary = "Obtener usuarios",
+            description = "Obtiene usuarios permitiendo filtrar por nombre y correo, además de utilizar paginación y ordenamiento."
+    )
+    @ApiResponses(value = {
 
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Usuarios obtenidos correctamente"
+            )
+    })
+    @GetMapping
+    public ResponseEntity<Page<UsuarioResponse>> obtenerUsuarios(
+
+            // Filtro opcional por nombre
+            @Parameter(
+                    description = "Nombre o parte del nombre del usuario",
+                    example = "Carlos"
+            )
+            @RequestParam(required = false)
+            String nombre,
+
+            // Filtro opcional por correo
+            @Parameter(
+                    description = "Correo o parte del correo del usuario",
+                    example = "gmail"
+            )
+            @RequestParam(required = false)
+            String correo,
+
+            // Parámetros de paginación y ordenamiento
+            Pageable pageable) {
+
+        // Buscamos los usuarios aplicando los filtros
+        Page<UsuarioResponse> pagina =
+                usuarioService.buscarUsuarios(
+                        nombre,
+                        correo,
+                        pageable
+                );
+
+        // Retornamos HTTP 200 OK
+        return ResponseEntity.ok(pagina);
+    }
 
     @Operation(
             summary = "Obtener usuario por ID",
@@ -322,6 +367,8 @@ public class UsuarioController {
         // Retornamos HTTP 200 OK
         return ResponseEntity.ok(pagina);
     }
+
+
 
 
 
